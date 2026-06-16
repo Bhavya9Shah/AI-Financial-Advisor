@@ -1,0 +1,24 @@
+{
+  "name": "Bhavya",
+  "age": "27",
+  "monthly_income": "90000",
+  "monthly_expenses": null,
+  "risk_tolerance": "moderate",
+  "investment_horizon_years": null,
+  "existing_investments": {
+    "equity": 0,
+    "mutual_funds": 0,
+    "fixed_deposits": 0,
+    "gold": 0,
+    "real_estate": 0
+  },
+  "financial_goals": [],
+  "emergency_fund_months": null,
+  "has_loans": false,
+  "loan_details": [],
+  "profile_complete": false,
+  "last_updated": null,
+  "financial_goal": "early retirement",
+  "favorite_sector": "IT",
+  "favorite_stock": "INFY.NS"
+}
