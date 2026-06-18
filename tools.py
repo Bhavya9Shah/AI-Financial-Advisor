@@ -453,6 +453,110 @@ def update_user_profile(field: str, value:str) -> dict:
     "new_value": value,
     "completeness": completeness
     }
+
+@tool
+def get_financial_news(ticker: str) -> dict:
+    """
+    Get latest financial news for a stock ticker.
+    """
+
+    POSITIVE_WORDS = [
+        "profit",
+        "profits",
+        "growth",
+        "gain",
+        "gains",
+        "partnership",
+        "partners",
+        "expands",
+        "expansion",
+        "record",
+        "surge",
+        "beats",
+        "revenue",
+        "adoption",
+        "scale",
+        "scaling"
+    ]
+
+    NEGATIVE_WORDS = [
+        "loss",
+        "losses",
+        "lawsuit",
+        "decline",
+        "fall",
+        "falls",
+        "drops",
+        "drop",
+        "misses",
+        "miss",
+        "rejected",
+        "rejects",
+        "penalty",
+        "challenge",
+        "hit",
+        "slower"
+    ]
+
+    def get_sentiment(title):
+
+        title = title.lower()
+
+        for word in POSITIVE_WORDS:
+            if word in title:
+                return "positive"
+
+        for word in NEGATIVE_WORDS:
+            if word in title:
+                return "negative"
+
+        return "neutral"
+    import yfinance as yf
+
+    ticker_obj = yf.Ticker(ticker)
+
+    headlines = []
+    positive = 0
+    negative = 0
+    neutral = 0
+
+    for article in ticker_obj.news[:10]:
+
+        title = article["content"]["title"]
+        sentiment = get_sentiment(title)
+
+        if sentiment == "positive":
+            positive += 1
+
+        elif sentiment == "negative":
+            negative += 1
+
+        else:
+            neutral += 1
+
+        headlines.append({
+            "title": title,
+            "source": article["content"]["provider"]["displayName"],
+            "date": article["content"]["pubDate"],
+            "sentiment": sentiment
+        })
+    if positive > negative:
+        overall_sentiment = "positive"
+
+    elif negative > positive:
+        overall_sentiment = "negative"
+
+    else:
+        overall_sentiment = "mixed"
+    
+    return {
+        "ticker": ticker,
+        "overall_sentiment": overall_sentiment,
+        "positive_news": positive,
+        "negative_news": negative,
+        "neutral_news": neutral,
+        "headlines": headlines
+    }
 # ---------------------------------------------------------------------------
 # Tool 5 — CAGR Calculator
 # ---------------------------------------------------------------------------
@@ -685,6 +789,7 @@ FINANCIAL_TOOLS = [
     calculate_cagr,
     get_user_profile,
     update_user_profile,
+    get_financial_news, 
 ]
 
 
