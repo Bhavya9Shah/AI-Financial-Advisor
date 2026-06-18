@@ -23,9 +23,10 @@ TEST_CASES = [
         "query": "My investment grew from ₹50,000 to ₹2,00,000 in 10 years. What's the CAGR?",
         "expected_tools": ["calculate_cagr"]
     },
-    
+
     {
     "name": "Financial News",
-    "query": "What is the latest news about TCS?"
+    "query": "What is the latest news about TCS?",
+    "expected_tools": ["get_financial_news"]
     }
 ]
