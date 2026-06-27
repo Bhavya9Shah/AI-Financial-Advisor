@@ -2,6 +2,7 @@ from langchain_core.messages import HumanMessage
 from eval_cases import TEST_CASES
 from agent_test import agent
 import json
+import time
 passed = 0
 failed = 0
 external_errors = 0
@@ -11,6 +12,8 @@ tool_total = 0
 
 arg_correct = 0
 arg_total = 0
+
+latencies = []
 
 for test in TEST_CASES:
 
@@ -24,13 +27,20 @@ for test in TEST_CASES:
             ]
         }
 
+        start = time.time()
+
         for chunk in agent.stream(
             agent_input,
             stream_mode="updates"
         ):
             first_chunk = chunk
             break
+        end = time.time()
 
+        latency = end - start
+        latencies.append(latency)
+
+        print(f"Latency: {latency:.2f} sec")
         message = first_chunk["model"]["messages"][0]
 
         # -------------------------------
@@ -176,3 +186,17 @@ else:
 
     else:
         print("Argument Status: SAME")
+
+    if latencies:
+        avg_latency = sum(latencies) / len(latencies)
+
+        print(f"Average Latency: {avg_latency:.2f} sec")
+        print(f"Fastest: {min(latencies):.2f} sec")
+        print(f"Slowest: {max(latencies):.2f} sec")
+    else:
+        avg_latency = 0
+        print("Latency metrics unavailable.")
+
+    print(f"Average Latency: {avg_latency:.2f} sec")
+    print(f"Fastest: {min(latencies):.2f} sec")
+    print(f"Slowest: {max(latencies):.2f} sec")
