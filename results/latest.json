@@ -1,8 +1,8 @@
 {
-    "passed": 2,
+    "passed": 1,
     "failed": 0,
-    "external_errors": 3,
+    "external_errors": 0,
     "tool_selection_accuracy": 1.0,
-    "argument_accuracy": 1.0,
-    "evaluation_completed": false
+    "argument_accuracy": 0,
+    "evaluation_completed": true
 }

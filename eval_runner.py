@@ -1,6 +1,7 @@
 from langchain_core.messages import HumanMessage
 from eval_cases import TEST_CASES
 from agent_test import agent
+from metrics import evaluate_response
 import json
 import time
 passed = 0
@@ -15,7 +16,7 @@ arg_total = 0
 
 latencies = []
 
-for test in TEST_CASES:
+for test in TEST_CASES[:1]:
 
     try:
 
@@ -29,27 +30,88 @@ for test in TEST_CASES:
 
         start = time.time()
 
+        all_chunks = []
+
         for chunk in agent.stream(
             agent_input,
             stream_mode="updates"
         ):
-            first_chunk = chunk
-            break
+            all_chunks.append(chunk)
+        print("\n====================")
+        print("ALL CHUNKS")
+        print("====================")
+
+        for i, chunk in enumerate(all_chunks):
+            print(f"\nChunk {i + 1}")
+            print(chunk)
         end = time.time()
 
         latency = end - start
         latencies.append(latency)
 
         print(f"Latency: {latency:.2f} sec")
-        message = first_chunk["model"]["messages"][0]
+        tool_message = all_chunks[0]["model"]["messages"][0]
 
+        tool_message = None
+        tool_output = None
+        final_message = None
+
+        for chunk in all_chunks:
+
+            # Tool execution result
+            if "tools" in chunk:
+                tool_output = chunk["tools"]["messages"][0]
+
+            # AI messages
+            elif "model" in chunk:
+
+                message = chunk["model"]["messages"][0]
+
+                # First AI message → tool call
+                if message.tool_calls:
+                    tool_message = message
+
+                # Final AI message → natural language response
+                else:
+                    final_message = message
+
+        if isinstance(final_message.content, list):
+            final_response = final_message.content[0]["text"]
+        else:
+            final_response = final_message.content
+        # Extract plain text from the final AI response
+        if isinstance(final_message.content, list):
+            final_response = ""
+
+            for item in final_message.content:
+                if item.get("type") == "text":
+                    final_response += item.get("text", "")
+
+        else:
+            final_response = final_message.content
+        response_score = evaluate_response(final_response)
+
+        print("\nResponse Evaluation")
+        print(response_score)
+        print("\n========================")
+        print("PARSED EXECUTION")
+        print("========================")
+
+        print("\nTool Call:")
+        print(tool_message.tool_calls)
+
+        print("\nTool Output:")
+        print(tool_output.content)
+
+        print("\nFinal Response:")
+        print(final_response)
         # -------------------------------
         # Tool Selection Evaluation
         # -------------------------------
 
         actual_tools = []
 
-        for tool_call in message.tool_calls:
+        for tool_call in tool_message.tool_calls:
             actual_tools.append(tool_call["name"])
 
         print("Expected Tools :", test["expected_tools"])
@@ -66,8 +128,8 @@ for test in TEST_CASES:
 
         actual_args = {}
 
-        if message.tool_calls:
-            actual_args = message.tool_calls[0]["args"]
+        if tool_message.tool_calls:
+            actual_args = tool_message.tool_calls[0]["args"]
 
         print("Expected Args  :", test.get("expected_args"))
         print("Actual Args    :", actual_args)
