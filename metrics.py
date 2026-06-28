@@ -283,20 +283,40 @@ class MetricScorer(ABC):
 # ─────────────────────────────────────────────────────────────────────────────
 # Private helpers
 # ─────────────────────────────────────────────────────────────────────────────
-
 def _extract_numbers_from_dict(d: Any) -> list[float]:
-    """Recursively collect all numeric leaf values from a dict/list."""
+    """
+    Recursively collect all numeric leaf values from a dict/list.
+    Also handles numeric strings like "90000" or "1834.25".
+    """
+
     numbers: list[float] = []
+
     if isinstance(d, dict):
-        for v in d.values():
-            numbers.extend(_extract_numbers_from_dict(v))
+
+        for value in d.values():
+            numbers.extend(_extract_numbers_from_dict(value))
+
     elif isinstance(d, list):
+
         for item in d:
             numbers.extend(_extract_numbers_from_dict(item))
-    elif isinstance(d, (int, float)) and not isinstance(d, bool):
-        numbers.append(float(d))
-    return numbers
 
+    elif isinstance(d, (int, float)) and not isinstance(d, bool):
+
+        numbers.append(float(d))
+
+    elif isinstance(d, str):
+
+        try:
+            cleaned = d.replace(",", "").replace("₹", "").strip()
+
+            if cleaned:
+                numbers.append(float(cleaned))
+
+        except ValueError:
+            pass
+
+    return numbers
 
 def _relative_error(actual: float, expected: float) -> float:
     """Relative error between actual and expected (safe for zero)."""

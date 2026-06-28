@@ -1,8 +1,17 @@
 {
-    "passed": 1,
+    "passed": 3,
     "failed": 0,
-    "external_errors": 0,
+    "external_errors": 1,
     "tool_selection_accuracy": 1.0,
-    "argument_accuracy": 0,
-    "evaluation_completed": true
+    "argument_accuracy": 1.0,
+    "response_score": 0.7360000000000001,
+    "correctness": 1.0,
+    "grounding": 0.20000000000000004,
+    "completeness": 0.96,
+    "helpfulness": 0.7333333333333334,
+    "clarity": 0.84,
+    "average_latency": 4.701456626256307,
+    "fastest_latency": 3.8784749507904053,
+    "slowest_latency": 5.818112134933472,
+    "evaluation_completed": false
 }
