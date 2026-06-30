@@ -523,15 +523,32 @@ class GroundingMetric(MetricScorer):
         # ── Sub-score A: numeric grounding ────────────────────────────────
         tol = 0.01  # 1 % relative tolerance for matching
         if response_nums and tool_nums:
-            grounded = sum(
-                1 for rn in response_nums
-                if _best_relative_error(tool_nums, rn) <= tol
-            )
+            grounded = 0
+            hallucinated = 0
+
+            for rn in response_nums:
+
+                if _best_relative_error(tool_nums, rn) <= tol:
+                    grounded += 1
+                else:
+                    hallucinated += 1
+
             sub_a = grounded / len(response_nums)
-            evidence.append(
-                f"Numeric grounding: {grounded}/{len(response_nums)} "
-                f"response numbers traceable to tool output"
-            )
+            hallucination_rate = 0.0
+
+            if response_nums:
+                hallucination_rate = hallucinated / len(response_nums)
+                evidence.append(
+                    f"Grounded claims      : {grounded}"
+                )
+
+                evidence.append(
+                    f"Hallucinated claims  : {hallucinated}"
+                )
+
+                evidence.append(
+                    f"Hallucination rate   : {hallucination_rate:.1%}"
+                )
         elif not response_nums:
             sub_a = 0.5  # can't verify but not wrong
             evidence.append("Response contains no numbers — grounding partially verified")
@@ -569,8 +586,10 @@ class GroundingMetric(MetricScorer):
 
         final_score = 0.6 * sub_a + 0.4 * sub_b
         reasoning = (
-            f"Numeric grounding={sub_a:.2f} (×0.6), "
-            f"summary citation={sub_b:.2f} (×0.4) → {final_score:.2f}"
+            f"Grounding Score={sub_a:.2f}, "
+            f"Hallucination Rate={hallucination_rate:.1%}, "
+            f"Summary Citation={sub_b:.2f} "
+            f"→ Final={final_score:.2f}"
         )
         return self._result(final_score, reasoning, evidence)
 
