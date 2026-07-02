@@ -1,4 +1,25 @@
-.env
+# Python
 __pycache__/
 *.pyc
+.pytest_cache/
+
+# Environment
+.env
+.venv/
+
+# VS Code
 .vscode/
+
+# Next.js
+frontend/node_modules/
+frontend/.next/
+
+# Root Node (if used)
+node_modules/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

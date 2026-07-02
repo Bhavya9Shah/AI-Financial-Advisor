@@ -47,7 +47,7 @@ import math
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any
-
+from metrics import evaluate_response
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Data structures
@@ -945,6 +945,7 @@ METRIC_REGISTRY: list[MetricScorer] = [
     CompletenessMetric(),
     HelpfulnessMetric(),
     ClarityMetric(),
+    HallucinationMetric()
 ]
 
 # Default weights — must sum to 1.0
