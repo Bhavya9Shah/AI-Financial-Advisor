@@ -545,7 +545,7 @@ class TestEvaluationOrchestrator:
         )
         result = EvaluationOrchestrator().evaluate(ctx)
         assert set(result.metric_results.keys()) == {
-            "correctness", "grounding", "completeness", "helpfulness", "clarity"
+            "correctness", "grounding", "completeness", "helpfulness", "clarity","hallucination"
         }
 
     def test_weighted_total_in_range(self):
@@ -582,7 +582,7 @@ class TestEvaluationOrchestrator:
         )
         result = EvaluationOrchestrator().evaluate(ctx)
         summary = result.summary()
-        for name in ["correctness", "grounding", "completeness", "helpfulness", "clarity"]:
+        for name in ["correctness", "grounding", "completeness", "helpfulness", "clarity","hallucination"]:
             assert name in summary
 
     def test_to_dict_structure(self):
@@ -592,7 +592,7 @@ class TestEvaluationOrchestrator:
         assert "weighted_total" in d
         assert "passed" in d
         assert "metrics" in d
-        for name in ["correctness", "grounding", "completeness", "helpfulness", "clarity"]:
+        for name in ["correctness", "grounding", "completeness", "helpfulness", "clarity","hallucination"]:
             assert name in d["metrics"]
             assert "score" in d["metrics"][name]
             assert "label" in d["metrics"][name]

@@ -47,7 +47,7 @@ import math
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any
-from metrics import evaluate_response
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Data structures
@@ -593,7 +593,50 @@ class GroundingMetric(MetricScorer):
         )
         return self._result(final_score, reasoning, evidence)
 
+class HallucinationMetric(MetricScorer):
 
+    """
+    Detects unsupported factual or numeric claims made by the LLM.
+
+    Score = 1 - hallucination_rate
+
+    Higher score = fewer hallucinations.
+    """
+
+    name = "hallucination"
+
+    def score(self, ctx: EvalContext) -> MetricResult:
+
+        response_nums = ctx.response_numbers
+        tool_nums = ctx.tool_output_numbers
+
+        if not response_nums:
+            return self._result(
+                1.0,
+                "No numeric claims found.",
+                []
+            )
+
+        grounded = 0
+
+        for rn in response_nums:
+
+            if _best_relative_error(tool_nums, rn) <= 0.01:
+                grounded += 1
+
+        hallucinated = len(response_nums) - grounded
+
+        rate = hallucinated / len(response_nums)
+
+        return self._result(
+            1 - rate,
+            f"Hallucination rate = {rate:.1%}",
+            [
+                f"Numeric claims      : {len(response_nums)}",
+                f"Grounded claims     : {grounded}",
+                f"Hallucinated claims : {hallucinated}"
+            ]
+        )
 # ─────────────────────────────────────────────────────────────────────────────
 # Metric 3 — Completeness
 # ─────────────────────────────────────────────────────────────────────────────
