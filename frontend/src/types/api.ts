@@ -101,7 +101,8 @@ export type MetricName =
   | "grounding"
   | "completeness"
   | "helpfulness"
-  | "clarity";
+  | "clarity"
+  |  "hallucination";
 
 export interface EvaluateResponse extends BaseResponse {
   weighted_total: number;
