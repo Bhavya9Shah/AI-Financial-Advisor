@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
@@ -342,7 +342,9 @@ function ProfileFieldEditor({
   const [value, setValue] = useState(initialValue);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
   async function handleSave() {
     setIsSaving(true);
     setSaved(false);

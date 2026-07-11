@@ -212,6 +212,10 @@ export async function postEvaluate(
  *
  * Returns the full updated profile and completeness metadata.
  */
+export async function getProfile(): Promise<ProfileResponse> {
+  const res = await apiClient.get<ProfileResponse>("/profile");
+  return res.data;
+}
 export async function postProfile(
   request: ProfileRequest
 ): Promise<ProfileResponse> {

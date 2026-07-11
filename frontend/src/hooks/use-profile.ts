@@ -16,7 +16,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { postProfile, isApiError } from "@/services/api";
+import { getProfile, postProfile, isApiError } from "@/services/api";
 import type {
   ProfileCompleteness,
   ProfileFieldName,
@@ -83,9 +83,7 @@ export function useProfile(): UseProfileReturn {
       // state by posting the name field with its current value (a no-op
       // that still returns the full profile + completeness in the response).
       // If you add GET /profile to the backend, replace this with getProfile().
-      const res = await postProfile({
-        updates: [{ field: "name", value: profileRef.current.name ?? "" }],
-      });
+      const res = await getProfile();
       applyResponse(res);
     } catch (err) {
       const msg = isApiError(err)

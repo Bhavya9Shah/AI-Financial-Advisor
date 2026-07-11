@@ -6,7 +6,6 @@ import {
   BrainCircuit,
   CheckCircle2,
   CircleDot,
-  Cloud,
   Code2,
   Database,
   FileJson,
@@ -25,52 +24,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
-const frontendModules = [
-  {
-    name: "App Shell",
-    detail: "Navigation, routing, command palette, and global layout.",
-  },
-  {
-    name: "Chat Interface",
-    detail: "Conversation lifecycle, reasoning trace, and tool inspection.",
-  },
-  {
-    name: "Profile Interface",
-    detail: "Persistent financial context and completeness tracking.",
-  },
-  {
-    name: "Evaluation Interface",
-    detail: "Manual evaluation requests and metric visualization.",
-  },
-];
 
-const apiEndpoints = [
-  {
-    method: "GET",
-    path: "/",
-    detail: "API connectivity and service metadata.",
-  },
-  {
-    method: "GET",
-    path: "/health",
-    detail: "Dependency-level health and availability checks.",
-  },
-  {
-    method: "POST",
-    path: "/chat",
-    detail: "Invoke the ReAct financial agent with conversation history.",
-  },
-  {
-    method: "POST",
-    path: "/evaluate",
-    detail: "Run deterministic evaluation over a completed agent response.",
-  },
-  {
-    method: "POST",
-    path: "/profile",
-    detail: "Update persistent financial profile fields.",
-  },
-];
+
 
 const agentTools = [
   {
