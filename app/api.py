@@ -37,7 +37,7 @@ import logging
 import os
 from contextlib import asynccontextmanager
 from typing import Any
-
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -136,9 +136,12 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:8501",     # Streamlit dev server
+        "http://localhost:8501",
         "http://127.0.0.1:8501",
-        "http://localhost:3000",     # if you ever add a React frontend
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3001",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -366,7 +369,25 @@ async def evaluate(request: EvaluateRequest) -> EvaluateResponse:
         metrics=metric_details,
     )
 
+@app.get("/profile", response_model=ProfileResponse, tags=["Profile"])
+async def get_profile() -> ProfileResponse:
+    """
+    Return the current persistent user financial profile
+    with completeness metadata.
+    """
+    logger.info("GET /profile")
 
+    result = profile_service.get_profile()
+
+    _require_success(result, status_code=500)
+
+    return ProfileResponse(
+        success=result["success"],
+        profile=result["profile"],
+        updated_fields=result["updated_fields"],
+        completeness=result["completeness"],
+        error=result.get("error"),
+    )
 @app.post("/profile", response_model=ProfileResponse, tags=["Profile"])
 async def update_profile(request: ProfileRequest) -> ProfileResponse:
     """
