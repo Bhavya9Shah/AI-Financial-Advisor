@@ -63,50 +63,34 @@ The application uses a Gemini-powered LangChain agent to understand financial qu
 FinSight follows a full-stack architecture:
 
 
+## Architecture
 
 ```text
-
-Next.js Frontend
-
-&#x20;       |
-
-&#x20;       | REST API
-
-&#x20;       v
-
-FastAPI Backend
-
-&#x20;       |
-
-&#x20;       v
-
-LangChain ReAct Agent
-
-&#x20;       |
-
-&#x20;       +---- Gemini 2.5 Flash
-
-&#x20;       |
-
-&#x20;       +---- Financial Tools
-
-&#x20;       |       |
-
-&#x20;       |       +---- Stock Information
-
-&#x20;       |       +---- SIP Calculator
-
-&#x20;       |       +---- CAGR Calculator
-
-&#x20;       |       +---- Financial News
-
-&#x20;       |       +---- Profile Management
-
-&#x20;       |
-
-&#x20;       +---- Persistent Profile Memory
-
-&#x20;       |
-
-&#x20;       +---- Deterministic Evaluation Framework
-
+┌─────────────────────┐
+│   Next.js Frontend  │
+└──────────┬──────────┘
+           │ REST API
+           ▼
+┌─────────────────────┐
+│   FastAPI Backend   │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ LangChain ReAct     │
+│ Agent               │
+└──────────┬──────────┘
+           │
+           ├── Gemini 2.5 Flash
+           │
+           ├── Financial Tools
+           │   ├── Stock Information
+           │   ├── SIP Calculator
+           │   ├── CAGR Calculator
+           │   ├── Financial News
+           │   └── Profile Management
+           │
+           ├── Persistent Profile Memory
+           │
+           └── Deterministic Evaluation Framework
+```
