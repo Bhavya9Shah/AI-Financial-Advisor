@@ -143,6 +143,7 @@ app.add_middleware(
         "http://localhost:3001",
         "http://127.0.0.1:3001",
         "https://ai-financial-advisor-git-frontend-batch2-bhavys.vercel.app",
+        "https://ai-financial-advisor-git-master-bhavys.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
