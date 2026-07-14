@@ -135,17 +135,8 @@ app = FastAPI(
 # CORS — allow the Streamlit app (runs on port 8501 by default) to call the API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:8501",
-        "http://127.0.0.1:8501",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3001",
-        "https://ai-financial-advisor-git-frontend-batch2-bhavys.vercel.app",
-        "https://ai-financial-advisor-git-master-bhavys.vercel.app",
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
