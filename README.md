@@ -66,31 +66,56 @@ FinSight follows a full-stack architecture:
 ## Architecture
 
 ```text
-┌─────────────────────┐
-│   Next.js Frontend  │
-└──────────┬──────────┘
-           │ REST API
-           ▼
-┌─────────────────────┐
-│   FastAPI Backend   │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│ LangChain ReAct     │
-│ Agent               │
-└──────────┬──────────┘
-           │
-           ├── Gemini 2.5 Flash
-           │
-           ├── Financial Tools
-           │   ├── Stock Information
-           │   ├── SIP Calculator
-           │   ├── CAGR Calculator
-           │   ├── Financial News
-           │   └── Profile Management
-           │
-           ├── Persistent Profile Memory
-           │
-           └── Deterministic Evaluation Framework
+┌──────────────────────────────────────────────────────────────────────┐
+│                         Next.js Frontend                            │
+│                                                                      │
+│   Dashboard       AI Chat       Profile       Evaluation             │
+│                                                                      │
+│                  TypeScript • Tailwind CSS                           │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │
+                                │ REST API
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                         FastAPI Backend                              │
+│                                                                      │
+│        Health API       Chat API       Profile API                   │
+│                                                                      │
+│                 Request / Response Validation                        │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                       LangChain ReAct Agent                          │
+│                                                                      │
+│                       Gemini 2.5 Flash                               │
+│                                │                                     │
+│                    Tool Selection & Execution                        │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │
+              ┌─────────────────┼──────────────────┐
+              │                 │                  │
+              ▼                 ▼                  ▼
+┌───────────────────┐ ┌───────────────────┐ ┌────────────────────────┐
+│ Financial Tools   │ │  Profile Memory   │ │   External Data        │
+│                   │ │                   │ │                        │
+│ • SIP Calculator  │ │ • User Profile    │ │ • Stock Information    │
+│ • CAGR Calculator │ │ • Profile Updates │ │ • Financial News       │
+│                   │ │ • Completeness    │ │ • News Sentiment       │
+└─────────┬─────────┘ └─────────┬─────────┘ └───────────┬────────────┘
+          │                     │                       │
+          └─────────────────────┼───────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                  Deterministic Evaluation Framework                  │
+│                                                                      │
+│   Correctness • Grounding • Completeness • Helpfulness • Clarity     │
+│                                                                      │
+│              Weighted Aggregate Score + Evidence                     │
+└──────────────────────────────────────────────────────────────────────┘
 ```
+
+FinSight uses a layered full-stack architecture. The Next.js client communicates with a FastAPI backend through REST endpoints. Financial queries are processed by a Gemini-powered LangChain ReAct agent, which selects dedicated tools for deterministic calculations, market information, financial news, and profile management.
+
+User financial information is maintained through persistent profile memory and profile-completeness tracking. Responses can be analyzed using a deterministic evaluation framework that measures correctness, grounding, completeness, helpfulness, and clarity without requiring an additional LLM evaluator during inference.
